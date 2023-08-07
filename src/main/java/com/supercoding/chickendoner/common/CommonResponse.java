@@ -9,13 +9,13 @@ public class CommonResponse<T> {
     private final boolean result;
     private final T status;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final T output;
+    private final T data;
 
     @Builder
-    public CommonResponse(boolean result, T status, T output) {
+    public CommonResponse(boolean result, T status, T data) {
         this.result = result;
         this.status = status;
-        this.output = output;
+        this.data = data;
     }
 }
 
