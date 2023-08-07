@@ -1,0 +1,28 @@
+spring:
+  jpa:
+    generate-ddl: 'false'
+    database: mysql
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        use_sql_comments: true
+        format_sql: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+  thymeleaf:
+    cache: false
+  datasource:
+    url: ENC(1AnaZmrHRmVi+QX8E2Q8EfVg+5fjR+0bv2hONafdGs1W/f+XUg5jCTHJbkKeZiwoLXaQZqKtlhUHOsNqsgBl9WIMJLoc4rA4RGaj2P88d3sLINYl8EZ1cA==)
+    password: ENC(HftPr3dDLmIbADAnv3hoQ/2EE8idWOqB)
+    username: ENC(2G52HwLqpByjby67RsvxPw==)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  devtools:
+    livereload:
+      enabled: true
+
+#jasypt
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
