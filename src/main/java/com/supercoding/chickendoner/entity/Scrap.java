@@ -2,11 +2,13 @@ package com.supercoding.chickendoner.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Getter
@@ -27,13 +29,15 @@ public class Scrap {
     @Column(name = "amount", nullable = false)
     private Long amount;
 
-    @Column(name = "is_deleted", nullable = false)
+    @CreationTimestamp
+    @Column(name = "is_deleted", nullable = false, insertable = false)
     private Boolean isDeleted;
 
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp createdAt;
 
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private Timestamp updatedAt;
 
 }

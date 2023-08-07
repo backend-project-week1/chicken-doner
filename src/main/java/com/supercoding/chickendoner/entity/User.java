@@ -2,8 +2,10 @@ package com.supercoding.chickendoner.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Getter
@@ -29,11 +31,13 @@ public class User {
     @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
 
-    @Column(name = "create_at", nullable = false)
-    private Instant createAt;
+    @CreationTimestamp
+    @Column(name = "create_at", nullable = false, updatable = false)
+    private Timestamp createAt;
 
-    @Column(name = "updated_at")
-    private Instant updatedAt;
+    @CreationTimestamp
+    @Column(name = "updated_at", insertable = false)
+    private Timestamp updatedAt;
 
     @Column(name = "is_deleted")
     private Boolean isDeleted;
