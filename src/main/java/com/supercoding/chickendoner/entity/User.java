@@ -1,5 +1,6 @@
 package com.supercoding.chickendoner.entity;
 
+import com.supercoding.chickendoner.security.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,5 +42,7 @@ public class User {
 
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+
+    private UserRole role;
 
 }
