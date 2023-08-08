@@ -18,7 +18,7 @@ import java.time.Instant;
 public class Chicken {
     @Id
     @Column(name = "idx", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "chiken_name", nullable = false, length = 50)
     private String chikenName;

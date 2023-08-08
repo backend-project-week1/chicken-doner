@@ -4,11 +4,11 @@ package com.supercoding.chickendoner.controller;
 import com.supercoding.chickendoner.common.CommonResponse;
 import com.supercoding.chickendoner.common.util.ApiUtils;
 import com.supercoding.chickendoner.dto.response.ChickenResponse;
-import com.supercoding.chickendoner.entity.Chicken;
 import com.supercoding.chickendoner.service.ChickenService;
 import io.swagger.annotations.ApiOperation;
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,12 +26,16 @@ public class ChickenController {
         // 바인딩된
         List<ChickenResponse> chickenList = chickenService.getChickenList();
 
-        return ApiUtils.success(true, 200, "성공",chickenList );
+        return ApiUtils.success(true, 200, "성공", chickenList);
     }
 
+    @GetMapping("/chicken/{chicken_id}")
+    @ApiOperation(value = "치킨 상세 조회")
+    public CommonResponse<Object> getChickenOne(@PathVariable("chicken_id") String chickenId) {
+        Long longChicken = Long.valueOf(chickenId);
 
-//    @ApiOperation(value = "치킨 상세 조회")
-//    public CommonResponse<Object> getChickenOne(){
-//
-//    }
+        ChickenResponse chickenOne = chickenService.getChickenOne(longChicken);
+
+        return ApiUtils.success(true, 200, "성공", chickenOne);
+    }
 }
