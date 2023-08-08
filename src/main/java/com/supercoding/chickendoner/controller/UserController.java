@@ -9,13 +9,11 @@ import com.supercoding.chickendoner.dto.request.UserDetailRequest;
 import com.supercoding.chickendoner.dto.response.LoginResponse;
 import com.supercoding.chickendoner.dto.response.UserDetailResponse;
 import com.supercoding.chickendoner.entity.User;
-import com.supercoding.chickendoner.security.TokenProvider;
+import com.supercoding.chickendoner.security.Auth;
+import com.supercoding.chickendoner.security.AuthHolder;
 import com.supercoding.chickendoner.service.UserService;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -45,19 +43,19 @@ public class UserController {
         if (loginUser == null) {
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
         }
-
-        String jwtToken = TokenProvider.createToken(loginUser);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setNickname(loginUser.getNickname());
-        loginResponse.setAccessToken(jwtToken);
+        LoginResponse loginResponse = userService.makeLoginResp(loginUser);
 
         return ApiUtils.success(true, 200, "로그인 성공", loginResponse);
 
     }
 
+    @Auth
     @GetMapping("/profile")
-    public CommonResponse<Object> myProfile (@Parameter(in = ParameterIn.HEADER, hidden = true) Authentication authentication) throws ParseException {
-        UserDetailResponse userDetailResponse = userService.getMyProfile(authentication.getName());
+    public CommonResponse<Object> myProfile() throws ParseException {
+        Long userIdx = AuthHolder.getUserIdx();
+
+        UserDetailResponse userDetailResponse = userService.getMyProfile(userIdx);
+
         return ApiUtils.success(true,200,"조회 성공", userDetailResponse);
     }
 

@@ -8,6 +8,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class LoginResponse {
-    private String nickname;
+
+    private Long userIdx;
+    private String username;
     private String accessToken;
 }

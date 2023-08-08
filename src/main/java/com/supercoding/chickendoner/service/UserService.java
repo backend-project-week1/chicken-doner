@@ -4,9 +4,11 @@ import com.supercoding.chickendoner.common.Error.CustomException;
 import com.supercoding.chickendoner.common.Error.ErrorCode;
 import com.supercoding.chickendoner.dto.request.LoginRequest;
 import com.supercoding.chickendoner.dto.request.UserDetailRequest;
+import com.supercoding.chickendoner.dto.response.LoginResponse;
 import com.supercoding.chickendoner.dto.response.UserDetailResponse;
 import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.repository.UserRepository;
+import com.supercoding.chickendoner.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,18 +65,27 @@ public class UserService {
         return optionalUser.get();
     }
 
-    public UserDetailResponse getMyProfile(String username) throws ParseException {
-        if(username == null){
+    public UserDetailResponse getMyProfile(Long userIdx) throws ParseException {
+        if(userIdx == null){
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
         }
 
-        Optional<User> loginUser = userRepository.findByUsername(username);
+        Optional<User> loginUser = userRepository.findById(userIdx);
         if(loginUser.isEmpty()){
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
         }
 
         UserDetailResponse userDetailResponse = new UserDetailResponse();
         return userDetailResponse.toResponse(loginUser.get());
+    }
 
+    public LoginResponse makeLoginResp(User loginUser) {
+        String jwtToken = TokenProvider.createToken(loginUser);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setUsername(loginUser.getUsername());
+        loginResponse.setUserIdx(loginUser.getId());
+        loginResponse.setAccessToken(jwtToken);
+
+        return loginResponse;
     }
 }
