@@ -31,7 +31,8 @@ public class SecurityConfig {
                 .and()
                 .addFilterBefore(new JwtTokenFilter(userService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/**").permitAll();
+                .antMatchers("/api/v1/user/profile").authenticated()
+                .anyRequest().permitAll();
         return http.build();
     }
 }

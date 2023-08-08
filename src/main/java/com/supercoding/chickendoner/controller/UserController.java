@@ -11,6 +11,8 @@ import com.supercoding.chickendoner.dto.response.UserDetailResponse;
 import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.security.TokenProvider;
 import com.supercoding.chickendoner.service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -35,7 +37,6 @@ public class UserController {
         } else {
             throw new CustomException(ErrorCode.INVALID_SIGNUP_FILED);
         }
-
     }
 
     @PostMapping("/login")
@@ -55,10 +56,9 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public CommonResponse<Object> myProfile(Authentication authentication) throws ParseException {
+    public CommonResponse<Object> myProfile (@Parameter(in = ParameterIn.HEADER, hidden = true) Authentication authentication) throws ParseException {
         UserDetailResponse userDetailResponse = userService.getMyProfile(authentication.getName());
         return ApiUtils.success(true,200,"조회 성공", userDetailResponse);
-//        return null;
     }
 
 }
