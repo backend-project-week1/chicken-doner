@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RequiredArgsConstructor
-@RestController(value = "api/v1/")
+@RestController(value = "/api/v1/")
 public class CommentControllor {
 
     private CommentService commentService;
