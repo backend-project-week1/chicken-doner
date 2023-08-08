@@ -14,7 +14,7 @@ spring:
   thymeleaf:
     cache: false
   datasource:
-    url: ENC(1AnaZmrHRmVi+QX8E2Q8EfVg+5fjR+0bv2hONafdGs1W/f+XUg5jCTHJbkKeZiwoLXaQZqKtlhUHOsNqsgBl9WIMJLoc4rA4RGaj2P88d3sLINYl8EZ1cA==)
+    url: ENC(uG0mjRXaDPgFaOJe4IFPIJwANw6bHQDWJnEggjzhMBxbxjGTIxeq+ANaQ0RQrNROQl14sBRS0DRdygqlXWCL0lcqQvw1pqEVZwNsqHKwtu27mPlC8X+56m5xqq3879Sy)
     password: ENC(HftPr3dDLmIbADAnv3hoQ/2EE8idWOqB)
     username: ENC(2G52HwLqpByjby67RsvxPw==)
     driver-class-name: com.mysql.cj.jdbc.Driver
