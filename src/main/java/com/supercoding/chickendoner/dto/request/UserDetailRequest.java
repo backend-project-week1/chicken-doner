@@ -1,5 +1,6 @@
 package com.supercoding.chickendoner.dto.request;
 
+import com.supercoding.chickendoner.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,5 +24,15 @@ public class UserDetailRequest {
     private String address;
     @NotBlank(message = "휴대폰 번호를 입력해주세요")
     private String phoneNumber;
+
+    public User toEntity(String encodePassword) {
+        return User.builder()
+                .username(this.username)
+                .password(encodePassword)
+                .nickname(this.nickname)
+                .address(this.address)
+                .phoneNumber(this.phoneNumber)
+                .build();
+    }
 
 }

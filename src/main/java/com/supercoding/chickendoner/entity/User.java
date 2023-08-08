@@ -1,8 +1,7 @@
 package com.supercoding.chickendoner.entity;
 
 import com.supercoding.chickendoner.security.UserRole;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -12,7 +11,10 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "user")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +27,9 @@ public class User {
     @Lob
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
 
     @Column(name = "address", nullable = false, length = 100)
     private String address;
