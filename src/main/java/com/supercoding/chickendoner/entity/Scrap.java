@@ -29,8 +29,7 @@ public class Scrap {
     @Column(name = "amount", nullable = false)
     private Long amount;
 
-    @CreationTimestamp
-    @Column(name = "is_deleted", nullable = false, insertable = false)
+    @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @CreationTimestamp

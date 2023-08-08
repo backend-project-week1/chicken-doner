@@ -18,6 +18,9 @@ spring:
     password: ENC(HftPr3dDLmIbADAnv3hoQ/2EE8idWOqB)
     username: ENC(2G52HwLqpByjby67RsvxPw==)
     driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   devtools:
     livereload:
       enabled: true
