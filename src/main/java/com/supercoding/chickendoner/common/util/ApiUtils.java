@@ -19,4 +19,17 @@ public class ApiUtils {
 
         return new CommonResponse<>(result, (T) status, data);
     }
+
+    public static <T> CommonResponse<T> fail(boolean result, int code, String message) {
+        @Data
+        class Status {
+            private int code;
+            private String message;
+        }
+        Status status = new Status();
+        status.setCode(code);
+        status.setMessage(message);
+
+        return new CommonResponse<>(result, (T) status, null);
+    }
 }

@@ -2,12 +2,17 @@ package com.supercoding.chickendoner.controller;
 
 import com.supercoding.chickendoner.common.CommonResponse;
 import com.supercoding.chickendoner.common.util.ApiUtils;
+import com.supercoding.chickendoner.service.ErrorExampleService;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class TestController {
+
+    private final ErrorExampleService errorExampleService;
 
     @Data
     private static class TestStatus {
@@ -38,6 +43,8 @@ public class TestController {
         testOutput.setMine(false);
         testOutput.setContent("글내용입니다글내용입니다글내용입니다글내용입니다글내용입니다글내용입니다글내용입니다");
         testOutput.setUserProfile("resource/~~~/~~.jpg");
+
+        errorExampleService.simulateError3();
 
 
         return ApiUtils.success(true, 200,  "성공", testOutput);
