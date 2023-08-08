@@ -68,13 +68,13 @@ public class UserService {
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
         }
 
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        if(optionalUser.isEmpty()){
+        Optional<User> loginUser = userRepository.findByUsername(username);
+        if(loginUser.isEmpty()){
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
         }
 
         UserDetailResponse userDetailResponse = new UserDetailResponse();
-        return userDetailResponse.toResponse(optionalUser.get());
+        return userDetailResponse.toResponse(loginUser.get());
 
     }
 }
