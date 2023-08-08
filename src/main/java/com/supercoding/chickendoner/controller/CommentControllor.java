@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RequiredArgsConstructor
-@RestController(value = "/api/v1/")
+@RestController
+@RequestMapping("/api/v1")
 public class CommentControllor {
 
     private CommentService commentService;
 
     @ApiOperation(value = "리뷰 대댓글 입력", nickname = "리뷰의 대한 대댓을 입력")
-    @PostMapping(value = "{review_id}/comment")
+    @PostMapping(value = "/{review_id}/comment")
     public CommonResponse<Object> createComment(
             @PathVariable("review_id") String reviewId,
             @RequestBody CommentRequest commentRequest
