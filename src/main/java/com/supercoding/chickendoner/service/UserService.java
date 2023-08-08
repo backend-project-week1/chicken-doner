@@ -2,13 +2,16 @@ package com.supercoding.chickendoner.service;
 
 import com.supercoding.chickendoner.common.Error.CustomException;
 import com.supercoding.chickendoner.common.Error.ErrorCode;
+import com.supercoding.chickendoner.dto.request.LoginRequest;
 import com.supercoding.chickendoner.dto.request.UserDetailRequest;
+import com.supercoding.chickendoner.dto.response.UserDetailResponse;
 import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Optional;
 
 @Service
@@ -32,6 +35,21 @@ public class UserService {
         return signUpUser.getUsername();
     }
 
+    public User login(LoginRequest loginRequest) {
+        Optional<User> optionalUser = userRepository.findByUsername(loginRequest.getUsername());
+
+        if (optionalUser.isEmpty()) {
+            throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
+        }
+        User loginUser = optionalUser.get();
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), loginUser.getPassword())) {
+            throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
+        }
+
+        return loginUser;
+    }
+
     public User getLoginUser(String username) {
         if(username == null){
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
@@ -43,5 +61,20 @@ public class UserService {
         }
 
         return optionalUser.get();
+    }
+
+    public UserDetailResponse getMyProfile(String username) throws ParseException {
+        if(username == null){
+            throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
+        }
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if(optionalUser.isEmpty()){
+            throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
+        }
+
+        UserDetailResponse userDetailResponse = new UserDetailResponse();
+        return userDetailResponse.toResponse(optionalUser.get());
+
     }
 }

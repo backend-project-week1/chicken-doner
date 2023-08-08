@@ -1,6 +1,7 @@
 package com.supercoding.chickendoner.dto.request;
 
 import com.supercoding.chickendoner.entity.User;
+import com.supercoding.chickendoner.security.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public class UserDetailRequest {
                 .nickname(this.nickname)
                 .address(this.address)
                 .phoneNumber(this.phoneNumber)
+                .role(UserRole.USER)
                 .build();
     }
 

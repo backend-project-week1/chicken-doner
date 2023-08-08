@@ -48,6 +48,7 @@ public class User {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
+    @Transient
     private UserRole role;
 
 }

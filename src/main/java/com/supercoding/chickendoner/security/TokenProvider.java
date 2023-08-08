@@ -17,7 +17,7 @@ public class TokenProvider {
     private static final String SECRET_KEY = "c3VwZXJjb2Rpbmc=";
 
     //로그인 유저 토큰 생성 코드
-    private String createToken(User user) {
+    public static String createToken(User user) {
         Date expiryDate = Date.from(
                 Instant.now()
                         .plus(1, ChronoUnit.DAYS)
