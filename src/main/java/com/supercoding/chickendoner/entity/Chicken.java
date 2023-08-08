@@ -1,7 +1,6 @@
 package com.supercoding.chickendoner.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -12,11 +11,14 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "chicken")
 public class Chicken {
     @Id
     @Column(name = "idx", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "chiken_name", nullable = false, length = 50)
     private String chikenName;
