@@ -1,7 +1,9 @@
 package com.supercoding.chickendoner.entity;
 
 import com.supercoding.chickendoner.entity.embeddedId.LikeId;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,8 +11,10 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "like")
-public class Like {
+@Table(name = "likes")
+@AllArgsConstructor
+@NoArgsConstructor
+public class Likes {
 
     @EmbeddedId
     private LikeId likeId;
