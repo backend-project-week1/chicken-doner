@@ -98,4 +98,5 @@ public class UserController {
         return ApiUtils.success(true, 200, userIdx +" 회원 수정 완료", null);
     }
 
+
 }

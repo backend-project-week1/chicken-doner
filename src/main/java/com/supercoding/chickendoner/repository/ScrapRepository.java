@@ -1,14 +1,11 @@
 package com.supercoding.chickendoner.repository;
 
-import com.supercoding.chickendoner.entity.Chicken;
 import com.supercoding.chickendoner.entity.Scrap;
-import com.supercoding.chickendoner.entity.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
@@ -20,7 +17,7 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     Scrap findScrapByChickenIdAndUserId(Long chickenIdx, Long useridx);
 
     //userId 를 넣어서 isDeleted = false 인 스크랩들만 찾아오기
-    List<Scrap> findAllByIsDeletedEqualsAndUserId(Boolean isDeleted, Long userIdx);
+    List<Scrap> findAllByIsDeletedEqualsAndUserId(Boolean isDeleted, Long userIdx, Sort createdAt);
 
 
 }
