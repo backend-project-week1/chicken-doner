@@ -86,7 +86,8 @@ public class UserService {
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
         }
         User user = userRepository.findById(userIdx).orElseThrow(()->new CustomException(ErrorCode.NOT_AUTHORIZED));
-        userRepository.deleteUser(user.getId());
+//        userRepository.deleteUser(user.getId());
+        userRepository.deleteById(user.getId());
         return user.getUsername();
     }
 
