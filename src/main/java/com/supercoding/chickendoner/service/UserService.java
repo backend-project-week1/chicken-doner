@@ -18,6 +18,7 @@ import com.supercoding.chickendoner.repository.UserRepository;
 import com.supercoding.chickendoner.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -141,7 +142,7 @@ public class UserService {
         }
 
         //userId와 boolean 값을 넣어서 isDeleted = false 인 스크랩들만 찾아오기
-        List<Scrap> scraps = scrapRepository.findAllByIsDeletedEqualsAndUserId(false, userIdx);
+        List<Scrap> scraps = scrapRepository.findAllByIsDeletedEqualsAndUserId(false, userIdx, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         //스크랩 디티오 리스트
         List<MyScrapResponse> myScrapResponses = new ArrayList<>();
@@ -178,6 +179,10 @@ public class UserService {
 
 
 }
+
+//public List<ReviewResponse> getReviewList(String type) {
+//        List<Review> reviewList = reviewRepository.findByIsDeletedEquals(false, Sort.by("createdAt"));
+//        ReviewResponse reviewResponse = new ReviewResponse();
 
 
 
