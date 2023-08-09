@@ -24,15 +24,16 @@ public class Comment {
     @Column(name = "user_idx", nullable = false)
     private Long userIdx;
 
-    @Column(name = "review_idx", nullable = false)
-    private Long reviewIdx;
+    @ManyToOne
+    @JoinColumn(name = "review_idx", nullable = false)
+    private Review reviewIdx;
 
     @Lob
     @Column(name = "content", nullable = false)
     private String content;
 
     @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
-    @Column(name = "created_at",  nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
     @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
@@ -41,6 +42,5 @@ public class Comment {
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
-
 
 }

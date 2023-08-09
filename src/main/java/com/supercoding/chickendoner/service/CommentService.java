@@ -4,8 +4,10 @@ import com.supercoding.chickendoner.common.Error.CustomException;
 import com.supercoding.chickendoner.common.Error.ErrorCode;
 import com.supercoding.chickendoner.dto.request.CommentGetRequest;
 import com.supercoding.chickendoner.dto.request.CommentRequest;
+import com.supercoding.chickendoner.dto.request.CommentUpdateRequest;
 import com.supercoding.chickendoner.dto.response.CommentGetResponse;
 import com.supercoding.chickendoner.entity.Comment;
+import com.supercoding.chickendoner.entity.Review;
 import com.supercoding.chickendoner.repository.CommentRepository;
 import com.supercoding.chickendoner.repository.주환리뷰임시레파이토리;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -31,14 +34,17 @@ public class CommentService {
 
     /*댓글 작성*/
     @Transactional
-    public void createComment(CommentRequest commentRequest) {
+    public void createComment(Long userIdx, Long reviewId, CommentRequest commentRequest) {
+
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_REVIEW));
+
 
         // 입력된 리뷰아이디를 조회하여 실제 등록되어있는 리뷰인지 확인한다 (값이 있으면 true)
-        boolean isExistReview = reviewRepository.existsByIdAndIsDeletedFalse(commentRequest.getReviewIdx());
+        boolean isExistReview = reviewRepository.existsByIdAndIsDeletedFalse(reviewId);
 
 
         // 유저번호, 리뷰번호, 댓글내용 예외처리
-        if (commentRequest.getUserIdx() == null) {
+        if (userIdx == null) {
             throw new CustomException(ErrorCode.NOTFOUND_USER);
         } else if (!isExistReview) {
             throw new CustomException(ErrorCode.NOTFOUND_REVIEW);
@@ -46,11 +52,7 @@ public class CommentService {
             throw new CustomException(ErrorCode.NOTFOUND_CONTENT);
         }
 
-        // 빌더패턴으로 Request를 엔티티로 매핑
-        Comment comment = Comment.builder().userIdx(commentRequest.getUserIdx()).reviewIdx(commentRequest.getReviewIdx()).content(commentRequest.getContent())
-                //JPA가 자동으로 만들어주기 때문에 null로 전송
-                //createdAt(Timestamp.valueOf(LocalDateTime.now()))
-                .isDeleted(false).build();
+        Comment comment = commentRequest.toEntity(userIdx, review);
 
         // 매핑된 엔티티 저장
         commentRepository.save(comment);
@@ -58,6 +60,7 @@ public class CommentService {
 
     public List<CommentGetResponse> getCommentByReview(CommentGetRequest getRequest) {
 
+        log.info("getRequest" + getRequest);
         // 리뷰에 대한 댓글이 있는지 확인하는 코드
         boolean isExistReview = commentRepository.existsByIdAndIsDeletedFalse(getRequest.getReviewIdx());
 
@@ -83,5 +86,24 @@ public class CommentService {
         }
         return getResponse;
     }
+
+    @Transactional
+    public void patchComment(CommentUpdateRequest commentUpdateRequest, Long userIdx, Long commentId) {
+        // 댓글 번호를 검색하여 기존 댓글 데이터를 불러오기
+        Comment findComment = commentRepository.findById(commentId).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_CHICKEN));
+
+
+        // 작성자만 수정이 가능하므로 작성자 여부를 확인하여 같지 않으면 예외처리
+        if (!Objects.equals(userIdx, findComment.getUserIdx())) {
+            throw new CustomException(ErrorCode.NOT_AUTHORIZED);
+        }
+
+        // 수정할 댓글과 기존댓글 데이터를 가져와 엔티티와 매핑하기
+        Comment updateEntity = commentUpdateRequest.updateEntity(commentUpdateRequest, findComment);
+
+        commentRepository.save(updateEntity);
+        log.info("test");
+    }
+
 
 }
