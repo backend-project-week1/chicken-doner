@@ -23,8 +23,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_idx", nullable = false)
-    private Long userIdx;
+    @ManyToOne
+    @JoinColumn(name = "user_idx", nullable = false)
+    private User userIdx;
 
     @ManyToOne
     @JoinColumn(name = "review_idx", nullable = false)

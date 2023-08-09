@@ -65,14 +65,14 @@ public class CommentController {
     @ApiOperation(value = "리뷰에 대한 댓글 수정")
     @PatchMapping(value = "/{comment_id}/comment")
     public CommonResponse<Object> patchcomment(
-            @PathVariable("comment_id") String commentId,
+            @PathVariable("comment_id") Long commentId,
             @RequestBody CommentUpdateRequest updateRequest
     ) {
         // 로그인된 유저아이디 불러오기
         Long userIdx = AuthHolder.getUserIdx();
 
         // 수정할 댓글, 유저번호, 댓글번호 매개변수로 전송
-        commentService.patchComment(updateRequest, userIdx, Long.valueOf(commentId));
+        commentService.patchComment(updateRequest, userIdx, commentId);
 
 
         log.info("test");

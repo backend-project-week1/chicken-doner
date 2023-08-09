@@ -8,8 +8,10 @@ import com.supercoding.chickendoner.dto.request.CommentUpdateRequest;
 import com.supercoding.chickendoner.dto.response.CommentGetResponse;
 import com.supercoding.chickendoner.entity.Comment;
 import com.supercoding.chickendoner.entity.Review;
+import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.repository.CommentRepository;
-import com.supercoding.chickendoner.repository.주환리뷰임시레파이토리;
+import com.supercoding.chickendoner.repository.ReviewRepository;
+import com.supercoding.chickendoner.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 
 
 @Service
@@ -28,31 +30,31 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    // ReviewRepository 파일이 없어서 임시로 만들었습니다.
-    private final 주환리뷰임시레파이토리 reviewRepository;
-    // private final ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
+
+    private final UserRepository userRepository;
 
     /*댓글 작성*/
     @Transactional
     public void createComment(Long userIdx, Long reviewId, CommentRequest commentRequest) {
 
+        // 리뷰객체 불러오면서 예외처리
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_REVIEW));
-
+        // 유저객체 불러오면서 예외처리
+        User user = userRepository.findById(userIdx).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_USER));
 
         // 입력된 리뷰아이디를 조회하여 실제 등록되어있는 리뷰인지 확인한다 (값이 있으면 true)
         boolean isExistReview = reviewRepository.existsByIdAndIsDeletedFalse(reviewId);
 
 
-        // 유저번호, 리뷰번호, 댓글내용 예외처리
-        if (userIdx == null) {
-            throw new CustomException(ErrorCode.NOTFOUND_USER);
-        } else if (!isExistReview) {
+        // 리뷰번호, 댓글내용 예외처리
+        if (!isExistReview) {
             throw new CustomException(ErrorCode.NOTFOUND_REVIEW);
         } else if (commentRequest.getContent().isEmpty()) {
             throw new CustomException(ErrorCode.NOTFOUND_CONTENT);
         }
 
-        Comment comment = commentRequest.toEntity(userIdx, review);
+        Comment comment = commentRequest.toEntity(user, review);
 
         // 매핑된 엔티티 저장
         commentRepository.save(comment);
@@ -92,9 +94,11 @@ public class CommentService {
         // 댓글 번호를 검색하여 기존 댓글 데이터를 불러오기
         Comment findComment = commentRepository.findById(commentId).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_CHICKEN));
 
+        // 유저 객체 데이터 가져오기
+        User user = userRepository.findById(userIdx).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_USER));
 
         // 작성자만 수정이 가능하므로 작성자 여부를 확인하여 같지 않으면 예외처리
-        if (!Objects.equals(userIdx, findComment.getUserIdx())) {
+        if (user != findComment.getUserIdx()) {
             throw new CustomException(ErrorCode.NOT_AUTHORIZED);
         }
 
@@ -104,6 +108,4 @@ public class CommentService {
         commentRepository.save(updateEntity);
         log.info("test");
     }
-
-
 }
