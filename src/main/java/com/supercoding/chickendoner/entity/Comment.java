@@ -2,6 +2,7 @@ package com.supercoding.chickendoner.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "comment")
+@SQLDelete(sql = "UPDATE comment as c SET c.is_deleted = true WHERE idx = ?")
 public class Comment {
     @Id
     @Column(name = "idx", nullable = false)

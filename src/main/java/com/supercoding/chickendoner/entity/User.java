@@ -3,6 +3,7 @@ package com.supercoding.chickendoner.entity;
 import com.supercoding.chickendoner.security.UserRole;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -15,6 +16,7 @@ import java.time.Instant;
 @Table(name = "user")
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE user as u SET u.is_deleted = true WHERE idx = ?")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
