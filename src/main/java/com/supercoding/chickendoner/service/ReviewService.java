@@ -72,7 +72,7 @@ public class ReviewService {
 
     //리뷰 리스트
     public List<ReviewResponse> getReviewList(String type) {
-        List<Review> reviewList = reviewRepository.findByIsDeletedEquals(false, Sort.by("createdAt"));
+        List<Review> reviewList = reviewRepository.findByIsDeletedEquals(false, Sort.by("createAt"));
         ReviewResponse reviewResponse = new ReviewResponse();
 
         return reviewList.stream()
