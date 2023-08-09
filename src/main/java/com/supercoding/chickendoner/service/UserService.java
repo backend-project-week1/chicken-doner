@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Optional;
@@ -67,6 +68,16 @@ public class UserService {
         }
 
         return optionalUser.get();
+    }
+
+    @Transactional
+    public String deleteUser(Long userIdx) {
+        if(userIdx == null){
+            throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
+        }
+        User user = userRepository.findById(userIdx).orElseThrow(()->new CustomException(ErrorCode.NOT_AUTHORIZED));
+        userRepository.deleteUser(user.getId());
+        return user.getUsername();
     }
 
     public UserDetailResponse getMyProfile(Long userIdx) throws ParseException {
