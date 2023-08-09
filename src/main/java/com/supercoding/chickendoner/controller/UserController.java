@@ -6,6 +6,8 @@ import com.supercoding.chickendoner.common.Error.ErrorCode;
 import com.supercoding.chickendoner.common.util.ApiUtils;
 import com.supercoding.chickendoner.dto.request.LoginRequest;
 import com.supercoding.chickendoner.dto.request.UserDetailRequest;
+import com.supercoding.chickendoner.dto.request.UserRequest;
+import com.supercoding.chickendoner.dto.request.UserUpdateRequest;
 import com.supercoding.chickendoner.dto.response.LoginResponse;
 import com.supercoding.chickendoner.dto.response.UserDetailResponse;
 import com.supercoding.chickendoner.entity.User;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -57,6 +60,18 @@ public class UserController {
         UserDetailResponse userDetailResponse = userService.getMyProfile(userIdx);
 
         return ApiUtils.success(true,200,"조회 성공", userDetailResponse);
+    }
+
+    @Auth
+    @PatchMapping("/profile")
+    public CommonResponse<Object> patchProfile(@RequestBody UserUpdateRequest userUpdateRequest) {
+        Long userIdx = AuthHolder.getUserIdx();
+        if (!Objects.equals(userIdx, userUpdateRequest.getUserIdx())) {
+            throw new CustomException(ErrorCode.NOT_AUTHORIZED);
+        }
+        userService.patchMyProfile(userUpdateRequest, userIdx);
+
+        return ApiUtils.success(true, 200, userIdx +" 회원 수정 완료", null);
     }
 
 }
