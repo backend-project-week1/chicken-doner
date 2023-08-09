@@ -46,10 +46,20 @@ public class UserController {
         if (loginUser == null) {
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
         }
+        if (Boolean.TRUE.equals(loginUser.getIsDeleted())) {
+            throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
+        }
         LoginResponse loginResponse = userService.makeLoginResp(loginUser);
 
         return ApiUtils.success(true, 200, "로그인 성공", loginResponse);
+    }
 
+    @Auth
+    @DeleteMapping("/delete")
+    public CommonResponse<Object> delete() {
+        Long userIdx = AuthHolder.getUserIdx();
+        String deletedUser = userService.deleteUser(userIdx);
+        return ApiUtils.success(true, 200, deletedUser +" 회원 탈퇴 성공", null);
     }
 
     @Auth
