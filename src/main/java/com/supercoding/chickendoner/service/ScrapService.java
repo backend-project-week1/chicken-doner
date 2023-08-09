@@ -59,7 +59,6 @@ public class ScrapService {
             //기존 스크랩의 amount에 + 1 추가
             scrapfound.setAmount(scrapfound.getAmount() + 1);
 
-
             scrapfound.setIsDeleted(false);
 
         } else {
@@ -68,8 +67,9 @@ public class ScrapService {
                     .chicken(chicken)
                     .user(user)
                     .amount(1L)
-                    .isDeleted(false)
-//                    .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                    .isDeleted(false) //처음에 새로 생성했을 때 isDeleted(false)
+                 // .createdAt(Timestamp.valueOf(LocalDateTime.now())) 안 넣어도 됨.
+                 //  엔티티의  @CreationTimestamp 으로 자동 생성.
                     .build();
 
             scrapRepository.save(newScrap);
@@ -97,17 +97,18 @@ public class ScrapService {
 
             Scrap scrapfound = scrapRepository.findScrapByChickenIdAndUserId(chicken.getId(), user.getId());
 
-            //스크랩 amount > 1 -> 스크랩 amount - 1, 수정시간 추가
+            //스크랩 amount > 1 -> 스크랩 amount - 1
             if (scrapfound.getAmount() > 1) {
                 scrapfound.setAmount(scrapfound.getAmount() - 1);
-                scrapfound.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+            //  scrapfound.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
-            //스크랩 amount = 1 -> 스크랩 amount - 1, 수정시간 추가, isDeleted(true)
+            //스크랩 amount = 1 -> 스크랩 amount - 1, isDeleted(true)
 
             } else if (scrapfound.getAmount() == 1){
                 scrapfound.setAmount(scrapfound.getAmount() - 1);
                 scrapfound.setIsDeleted(true);
-                scrapfound.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+            //  scrapfound.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+            //  굳이 설정 안해줘도 scrap 엔티티의 @UpdateTimestamp로 자동 업데이트 됨.
 
             } else throw new CustomException(ErrorCode.REQUEST_INVALID); //스크랩 amount = 0인 상태에서 요청보낼 때 에러.
 
