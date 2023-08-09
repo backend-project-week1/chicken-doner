@@ -1,12 +1,14 @@
 package com.supercoding.chickendoner.dto.response;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.supercoding.chickendoner.entity.Comment;
+import lombok.*;
+
 
 @Getter
 @NoArgsConstructor
 @Setter
+@Builder
+@AllArgsConstructor
 public class CommentGetResponse {
 
     private Long commentIdx;
@@ -14,4 +16,13 @@ public class CommentGetResponse {
     private String content;
     private String createdAt;
 
+
+    public CommentGetResponse commentGetResponse(Comment comment) {
+        return CommentGetResponse.builder()
+                .commentIdx(comment.getReviewIdx())
+                .writer(String.valueOf(comment.getUserIdx()))
+                .content(comment.getContent())
+                .createdAt(String.valueOf(comment.getCreatedAt()))
+                .build();
+    }
 }
