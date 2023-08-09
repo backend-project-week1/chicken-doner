@@ -11,4 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface ReviewRepository extends JpaRepository<Review,Long> {
     List<Review> findByIsDeletedEquals(boolean isDeleted, Sort sort);
 
+    /* 실제 존재하는 리뷰인지 확인하는 코드*/
+    boolean existsByIdAndIsDeletedFalse(Long reviewIdx);
+
 }

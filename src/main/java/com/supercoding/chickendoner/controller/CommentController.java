@@ -2,7 +2,7 @@ package com.supercoding.chickendoner.controller;
 
 import com.supercoding.chickendoner.common.CommonResponse;
 import com.supercoding.chickendoner.common.util.ApiUtils;
-import com.supercoding.chickendoner.dto.request.CommentGetRequest;
+import com.supercoding.chickendoner.dto.request.CommentDeleteRequest;
 import com.supercoding.chickendoner.dto.request.CommentRequest;
 import com.supercoding.chickendoner.dto.request.CommentUpdateRequest;
 import com.supercoding.chickendoner.dto.response.CommentGetResponse;
@@ -45,18 +45,10 @@ public class CommentController {
     @ApiOperation(value = "리뷰에 대한 댓글 조회")
     @GetMapping(value = "/{review_id}/comment")
     public CommonResponse<Object> getCommentsByReview(
-            @PathVariable("review_id") String reviewIdx
+            @PathVariable("review_id") Long reviewIdx
     ) {
-        // PathVariable의 String 형태를 Long으로 형변환
-        Long longReviewIdx = Long.valueOf(reviewIdx);
 
-        // 댓글GetRequest 선언
-        CommentGetRequest request = new CommentGetRequest();
-
-        // 객체 속 선언한 빌더 실행 후 결과 담기
-        CommentGetRequest commentsGetByReview = request.getCommentsGetByReview(longReviewIdx);
-
-        List<CommentGetResponse> commentByReview = commentService.getCommentByReview(commentsGetByReview);
+        List<CommentGetResponse> commentByReview = commentService.getCommentByReview(reviewIdx);
 
         return ApiUtils.success(true, 200, "댓글 리스트 출력", commentByReview);
     }
@@ -65,19 +57,28 @@ public class CommentController {
     @ApiOperation(value = "리뷰에 대한 댓글 수정")
     @PatchMapping(value = "/{comment_id}/comment")
     public CommonResponse<Object> patchcomment(
-            @PathVariable("comment_id") String commentId,
+            @PathVariable("comment_id") Long commentId,
             @RequestBody CommentUpdateRequest updateRequest
     ) {
         // 로그인된 유저아이디 불러오기
         Long userIdx = AuthHolder.getUserIdx();
 
         // 수정할 댓글, 유저번호, 댓글번호 매개변수로 전송
-        commentService.patchComment(updateRequest, userIdx, Long.valueOf(commentId));
-
-
-        log.info("test");
-
+        commentService.patchComment(updateRequest, userIdx, commentId);
 
         return ApiUtils.success(true, 200, userIdx + "댓글 수정이 완료되었습니다.", null);
+    }
+
+    @Auth
+    @ApiOperation(value = "댓글 삭제")
+    @DeleteMapping("/comment")
+    public CommonResponse<Object> delete(@RequestBody CommentDeleteRequest commentDeleteRequest) {
+        // 로그인된 유저아이디 불러오기
+        Long userIdx = AuthHolder.getUserIdx();
+
+        commentService.deleteComment(commentDeleteRequest, userIdx);
+
+        return ApiUtils.success(true, 200, "댓글이 삭제되었습니다.", null);
+
     }
 }

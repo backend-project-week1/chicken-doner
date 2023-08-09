@@ -36,6 +36,7 @@ public enum ErrorCode {
     // 댓글
     NOTFOUND_CONTENT(412, "댓글이 입력되지 않았습니다."),
 
+    NOTFOUND_COMMENT(404,"해당 댓글을 찾을 수 없습니다."),
     // 리뷰
     NOTFOUND_REVIEW(406,"요청하신 리뷰페이지를 찾을 수 없습니다."),
 
