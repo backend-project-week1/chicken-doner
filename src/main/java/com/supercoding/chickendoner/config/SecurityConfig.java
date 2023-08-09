@@ -1,6 +1,7 @@
 package com.supercoding.chickendoner.config;
 
 
+import com.supercoding.chickendoner.common.ExceptionHandlerFilter;
 import com.supercoding.chickendoner.security.JwtTokenFilter;
 import com.supercoding.chickendoner.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(new ExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .cors().and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
