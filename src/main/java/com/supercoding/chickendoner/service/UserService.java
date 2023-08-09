@@ -4,12 +4,15 @@ import com.supercoding.chickendoner.common.Error.CustomException;
 import com.supercoding.chickendoner.common.Error.ErrorCode;
 import com.supercoding.chickendoner.dto.request.LoginRequest;
 import com.supercoding.chickendoner.dto.request.UserDetailRequest;
+import com.supercoding.chickendoner.dto.request.UserRequest;
+import com.supercoding.chickendoner.dto.request.UserUpdateRequest;
 import com.supercoding.chickendoner.dto.response.LoginResponse;
 import com.supercoding.chickendoner.dto.response.UserDetailResponse;
 import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.repository.UserRepository;
 import com.supercoding.chickendoner.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,7 @@ import java.text.ParseException;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
@@ -77,6 +81,18 @@ public class UserService {
 
         UserDetailResponse userDetailResponse = new UserDetailResponse();
         return userDetailResponse.toResponse(loginUser.get());
+    }
+
+    public void patchMyProfile(UserUpdateRequest userUpdateRequest, Long userIdx) {
+        if(userIdx == null){
+            throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
+        }
+
+        User originUser = userRepository.findById(userIdx).orElseThrow(()->new CustomException(ErrorCode.NOT_AUTHORIZED));
+        originUser = userUpdateRequest.updateEntity(userUpdateRequest, originUser);
+
+        userRepository.save(originUser);
+
     }
 
     public LoginResponse makeLoginResp(User loginUser) {
