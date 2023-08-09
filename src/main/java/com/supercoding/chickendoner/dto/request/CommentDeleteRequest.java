@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentDeleteRequest {
 
-    private Long reviewIdx;
-    private Long contentIdx;
+    private Long commentIdx;
+
+
 }

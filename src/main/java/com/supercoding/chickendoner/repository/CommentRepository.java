@@ -10,8 +10,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     /* 해당 리뷰에 대한 댓글 전체조회(삭제 안된 것) */
-    List<Comment> findByReviewIdxAndIsDeletedFalse(Long reviewIdx);
-
+    List<Comment> findAllByReviewIdx_IdAndIsDeletedFalse(Long reviewIdxS);
 
     /* 리뷰에 대한 댓글이 있는지 확인하는 코드*/
     boolean existsByIdAndIsDeletedFalse(Long reviewIdx);

@@ -2,7 +2,7 @@ package com.supercoding.chickendoner.service;
 
 import com.supercoding.chickendoner.common.Error.CustomException;
 import com.supercoding.chickendoner.common.Error.ErrorCode;
-import com.supercoding.chickendoner.dto.request.CommentGetRequest;
+import com.supercoding.chickendoner.dto.request.CommentDeleteRequest;
 import com.supercoding.chickendoner.dto.request.CommentRequest;
 import com.supercoding.chickendoner.dto.request.CommentUpdateRequest;
 import com.supercoding.chickendoner.dto.response.CommentGetResponse;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 
 @Service
@@ -60,11 +60,10 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public List<CommentGetResponse> getCommentByReview(CommentGetRequest getRequest) {
+    public List<CommentGetResponse> getCommentByReview(Long reviewIdx) {
 
-        log.info("getRequest" + getRequest);
         // 리뷰에 대한 댓글이 있는지 확인하는 코드
-        boolean isExistReview = commentRepository.existsByIdAndIsDeletedFalse(getRequest.getReviewIdx());
+        boolean isExistReview = commentRepository.existsByIdAndIsDeletedFalse(reviewIdx);
 
 
         // 해당 리뷰가 존재하는지 확인
@@ -73,7 +72,7 @@ public class CommentService {
         }
 
         // 입력된 리뷰아이디를 가진 댓글을 모두 찾아온다
-        List<Comment> commentList = commentRepository.findByReviewIdxAndIsDeletedFalse(getRequest.getReviewIdx());
+        List<Comment> commentList = commentRepository.findAllByReviewIdx_IdAndIsDeletedFalse(reviewIdx);
         // 객체를 담을 리스트 생성
         List<CommentGetResponse> getResponse = new ArrayList<>();
 
@@ -107,5 +106,19 @@ public class CommentService {
 
         commentRepository.save(updateEntity);
         log.info("test");
+    }
+
+    @Transactional
+    public void deleteComment(CommentDeleteRequest deleteRequest, Long userIdx) {
+
+        Comment comment = commentRepository.findById(deleteRequest.getCommentIdx()).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_COMMENT));
+
+        // 댓글을 삭제하려는 유져가 본인이 맞는지 확인
+        if (!Objects.equals(comment.getUserIdx().getId(), userIdx)) {
+            throw new CustomException(ErrorCode.NOT_AUTHORIZED);
+        }
+
+        commentRepository.deleteById(comment.getId());
+
     }
 }

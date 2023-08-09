@@ -20,7 +20,7 @@ public class CommentGetResponse {
     public CommentGetResponse commentGetResponse(Comment comment) {
         return CommentGetResponse.builder()
                 .commentIdx(comment.getId())
-                .writer(String.valueOf(comment.getUserIdx()))
+                .writer(comment.getUserIdx().getNickname())
                 .content(comment.getContent())
                 .createdAt(String.valueOf(comment.getCreatedAt()))
                 .build();
