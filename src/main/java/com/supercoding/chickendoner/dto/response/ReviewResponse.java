@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReviewResponse {
+public class ReviewResponse {//보내줄 데이터
 
     private Long idx;
     private String title;
@@ -26,13 +26,16 @@ public class ReviewResponse {
     private String writer;
     private boolean isDeleted;
 
-    public ReviewResponse  getReview(Review review,User user){
+
+
+    public ReviewResponse getReview(Review review,User user){//FE 보내줄 데이터
         return ReviewResponse.builder()
+            .idx(review.getId())
             .title(review.getTitle())
             .content(review.getContent())
             .point(review.getPoint())
             .isDeleted(false)
-            .writer(user.getNickname())
+            .writer(user.getNickname()) //회원 전체가 아닌 작성자로 알 수 있게
             .createAt(review.getCreateAt())
             .build();
     }

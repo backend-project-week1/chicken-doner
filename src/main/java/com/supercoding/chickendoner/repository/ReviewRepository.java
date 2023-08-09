@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review,Long> {
     List<Review> findByIsDeletedEquals(boolean isDeleted, Sort sort);
+
 }
