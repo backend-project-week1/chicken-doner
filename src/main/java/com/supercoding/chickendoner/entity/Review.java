@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLDelete;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+
 @Getter
 @Setter
 @Entity
@@ -28,7 +29,6 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "user_idx", nullable = false)
     private User userIdx;
-
     @Column(name = "chicken_idx", nullable = false)
     private Long chickenIdx;
     @Column(name = "title", nullable = false)

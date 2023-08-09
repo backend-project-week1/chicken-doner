@@ -2,10 +2,12 @@ package com.supercoding.chickendoner.service;
 
 import com.supercoding.chickendoner.common.Error.CustomException;
 import com.supercoding.chickendoner.common.Error.ErrorCode;
-import com.supercoding.chickendoner.dto.request.ReviewRequest;
+import com.supercoding.chickendoner.dto.request.ReviewCreateRequest;
 import com.supercoding.chickendoner.dto.response.ReviewResponse;
+import com.supercoding.chickendoner.entity.Chicken;
 import com.supercoding.chickendoner.entity.Review;
 import com.supercoding.chickendoner.entity.User;
+import com.supercoding.chickendoner.repository.ChickenRepository;
 import com.supercoding.chickendoner.repository.ReviewRepository;
 import com.supercoding.chickendoner.repository.UserRepository;
 import java.util.List;
@@ -24,43 +26,52 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
 
+    private final ChickenRepository chickenRepository;
+
     //리뷰 생성
-    public void createReview(Long userIdx, ReviewRequest reviewRequest) {
+    public void createReview(Long userIdx, ReviewCreateRequest reviewRequest) {
+
         User user = userRepository.findById(userIdx)
             .orElseThrow(() -> new CustomException(ErrorCode.HANDLE_ACCESS_DENIED));
-        Review review = reviewRequest.of(reviewRequest,user);
+
+        Chicken chicken = chickenRepository.findById(reviewRequest.getChickenId())
+            .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_CHICKEN));
+
+        Review review = reviewRequest.of(reviewRequest,user,chicken);
         reviewRepository.save(review);
     }
     //리뷰 가져오기
-    public Review getReview(Long Id) {
-        return reviewRepository.findById(Id)
+    public Review getReview(Long id) {
+        return reviewRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));//id로 리뷰를 가져오기
     }
 
     //리뷰삭제
-    public void deleteReview(Long userIdx, Long id) {
+    public Long deleteReview(Long userIdx, Long id) {
         //게시글 검증
         Review review = reviewRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
     //유저 검증
-        if(review.getUserIdx().getId().equals(userIdx)){
+        if(!review.getUserIdx().getId().equals(userIdx)){
             throw new CustomException(ErrorCode.CANT_ACCESS);
         }
         reviewRepository.deleteById(id);
+        return review.getId();
     }
 //리뷰 수정
     public void updateReview(Long userIdx, Long id) {
         Review review = reviewRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
 
-        if(review.getUserIdx().getId().equals(userIdx)){
+        if(!review.getUserIdx().getId().equals(userIdx)){
             throw new CustomException(ErrorCode.CANT_ACCESS);
         }
         review.updateContent(review.getContent());
         reviewRepository.save(review);
     }
-    //좋아요 순
-    public List<ReviewResponse> getReviewList(String Type) {
+
+    //리뷰 리스트
+    public List<ReviewResponse> getReviewList(String type) {
         List<Review> reviewList = reviewRepository.findByIsDeletedEquals(false, Sort.by("createdAt"));
         ReviewResponse reviewResponse = new ReviewResponse();
 
@@ -70,6 +81,5 @@ public class ReviewService {
                return reviewResponse.getReview(review, user.get());
             })
             .collect(Collectors.toList());
-
     }
 }
