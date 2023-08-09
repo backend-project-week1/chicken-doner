@@ -140,10 +140,7 @@ public class UserService {
             throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
         }
 
-//        //유저
-//        User user = userRepository.findById(userIdx).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_USER));
-
-        //스크랩 리스트
+        //userId와 boolean 값을 넣어서 isDeleted = false 인 스크랩들만 찾아오기
         List<Scrap> scraps = scrapRepository.findAllByIsDeletedEqualsAndUserId(false, userIdx);
 
         //스크랩 디티오 리스트
@@ -154,36 +151,33 @@ public class UserService {
             return null;
         } else { // 스크랩 리스트에 내용이 있을 때
 
-        //myScraps: 스크랩의 isDeleted가 false인 스크랩들만 모음
-//            List<Scrap> myScraps = scraps.stream().filter(scrap -> !scrap.getIsDeleted()).collect(Collectors.toList());
+
+        /* myScraps: 스크랩의 isDeleted가 false인 스크랩들만 모음 (아래 코드는 느리기 때문에 레포에서 쿼리로 가져오는 게 빠름)
+        List<Scrap> myScraps = scraps.stream().filter(scrap -> !scrap.getIsDeleted()).collect(Collectors.toList()); */
+
 
         //myScrap(엔티티)마다 myScrapResponse(디티오)로 변환해주는 로직
             for(Scrap scrap: scraps) {
 
+                //chickenScrap(디티오)는 scrap(엔티티)를 ChickenScrap(디티오)의 toChickenScrap 메소드에 넣고 반환된 디티오
+                ChickenScrap chickenScrap = new ChickenScrap();
+                ChickenScrap chickenScrap1 = chickenScrap.toChickenScrap(scrap);
 
-                ChickenScrap chickenScrap = ChickenScrap.builder()
-                        .chickenName(scrap.getChicken().getChikenName()) // 치킨 엔티티의 이름 필드를 가져와 설정
-                        .content(scrap.getChicken().getContent())   // 치킨 엔티티의 content 필드를 가져와 설정
-                        .price(scrap.getChicken().getPrice())       // 치킨 엔티티의 price 필드를 가져와 설정
-                        .build();
+                //myScrapResponse(디티오)는 chickenScrap(디티오)를 MyScrapResponse(디티오)의 toMyScrapResponse 메소드에 넣고 맞춰준 디티오.
+                MyScrapResponse myScrapResponse = new MyScrapResponse();
+                MyScrapResponse myScrapResponse1 = myScrapResponse.toMyScrapResponse(chickenScrap1);
 
-                MyScrapResponse myScrapResponse = MyScrapResponse.builder()
-                        .chickenScrap(chickenScrap)
-                        .build();
-
-
-                myScrapResponses.add(myScrapResponse);
+                //myScrapResponse(최종 디티오)를 myScrapResponse 리스트에 넣어준다.
+                myScrapResponses.add(myScrapResponse1);
 
         }
-
+            //myScrapResponse 리스트 반환.
             return myScrapResponses;
         }
     }
 
 
 }
-
-
 
 
 
