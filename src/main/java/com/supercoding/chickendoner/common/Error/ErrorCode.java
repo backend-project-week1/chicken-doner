@@ -31,7 +31,7 @@ public enum ErrorCode {
     //스크랩
     NOTFOUND_ITEM(404, "해당 아이템을 찾을 수 없습니다."),
     REQUEST_INVALID(400, "잘못된 요청입니다."),
-
+    CANT_ACCESS(400,"접근권한이 없습니다"),
 
     // 댓글
     NOTFOUND_CONTENT(412, "댓글이 입력되지 않았습니다."),

@@ -1,16 +1,21 @@
 package com.supercoding.chickendoner.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "review")
 public class Review {
     @Id
@@ -18,12 +23,14 @@ public class Review {
     @Column(name = "idx", nullable = false)
     private Long id;
 
-    @Column(name = "user_idx", nullable = false)
-    private Long userIdx;
+    @ManyToOne
+    @JoinColumn(name = "user_idx", nullable = false)
+    private User userIdx;
 
     @Column(name = "chicken_idx", nullable = false)
     private Long chickenIdx;
-
+    @Column(name = "title", nullable = false)
+    private String title;
     @Lob
     @Column(name = "content", nullable = false)
     private String content;
@@ -45,4 +52,7 @@ public class Review {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
