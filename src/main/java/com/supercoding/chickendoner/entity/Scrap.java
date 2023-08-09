@@ -1,30 +1,32 @@
 package com.supercoding.chickendoner.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.Instant;
 
+@Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "scrap")
 public class Scrap {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx", nullable = false)
     private Long id;
 
-    @Column(name = "user_idx", nullable = false)
-    private Long userIdx;
+    @ManyToOne
+    @JoinColumn(name = "user_idx", nullable = false)
+    private User user;   //장바구니는 치킨 등록 시 생성, user_idx는 유저의 id로 장바구니 생성 시 불러옵니다.
 
-    @Column(name = "chicken_idx", nullable = false)
-    private Long chickenIdx;
+    @ManyToOne
+    @JoinColumn(name="chicken_idx", nullable = false)
+    private Chicken chicken;
 
     @Column(name = "amount", nullable = false)
     private Long amount;
@@ -36,7 +38,10 @@ public class Scrap {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at", insertable = false)
     private Timestamp updatedAt;
+
+
 
 }

@@ -27,9 +27,15 @@ public enum ErrorCode {
     NOTFOUND_POST(404, "해당 게시글이 존재하지 않습니다."),
     CONVERTING_FAILED(400, "파일 변환에 실패했습니다."),
 
+
+    //스크랩
+    NOTFOUND_ITEM(404, "해당 아이템을 찾을 수 없습니다."),
+    REQUEST_INVALID(400, "잘못된 요청입니다."),
+
+
     // 치킨
     NOTFOUND_ALL_CHICKEN(404,"현재 등록된 치킨이 없습니다."),
-    NOTFOUND_CHICKEN(404,"해당 치킨은 존재하지 않습니다.")
+    NOTFOUND_CHICKEN(404,"해당 치킨은 존재하지 않습니다.");
 
             ;
     private final String message;
