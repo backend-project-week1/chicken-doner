@@ -180,9 +180,7 @@ public class UserService {
 
 }
 
-//public List<ReviewResponse> getReviewList(String type) {
-//        List<Review> reviewList = reviewRepository.findByIsDeletedEquals(false, Sort.by("createdAt"));
-//        ReviewResponse reviewResponse = new ReviewResponse();
+
 
 
 
