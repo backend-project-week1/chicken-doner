@@ -18,4 +18,12 @@ public class MyScrapResponse {
     private ChickenScrap chickenScrap;
 
 
+    public MyScrapResponse toMyScrapResponse(ChickenScrap chickenScrap){
+        return MyScrapResponse.builder()
+                .chickenScrap(chickenScrap)
+                .build();
+
+    }
+
+
 }

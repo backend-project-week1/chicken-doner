@@ -160,6 +160,7 @@ public class UserService {
         //myScrap(엔티티)마다 myScrapResponse(디티오)로 변환해주는 로직
             for(Scrap scrap: scraps) {
 
+
                 ChickenScrap chickenScrap = ChickenScrap.builder()
                         .chickenName(scrap.getChicken().getChikenName()) // 치킨 엔티티의 이름 필드를 가져와 설정
                         .content(scrap.getChicken().getContent())   // 치킨 엔티티의 content 필드를 가져와 설정

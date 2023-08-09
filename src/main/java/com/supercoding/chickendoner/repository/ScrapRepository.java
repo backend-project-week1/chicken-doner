@@ -19,10 +19,7 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     //치킨 아이디와 유저 아이디를 가지고 생성된 스크랩(장바구니) 불러오기
     Scrap findScrapByChickenIdAndUserId(Long chickenIdx, Long useridx);
 
-
-
-
-
+    //userId 를 넣어서 isDeleted = false 인 스크랩들만 찾아오기
     List<Scrap> findAllByIsDeletedEqualsAndUserId(Boolean isDeleted, Long userIdx);
 
 
