@@ -9,6 +9,7 @@ import com.supercoding.chickendoner.dto.request.UserDetailRequest;
 import com.supercoding.chickendoner.dto.request.UserRequest;
 import com.supercoding.chickendoner.dto.request.UserUpdateRequest;
 import com.supercoding.chickendoner.dto.response.LoginResponse;
+import com.supercoding.chickendoner.dto.response.MyScrapResponse;
 import com.supercoding.chickendoner.dto.response.UserDetailResponse;
 import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.security.Auth;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.Objects;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -71,6 +73,18 @@ public class UserController {
 
         return ApiUtils.success(true,200,"조회 성공", userDetailResponse);
     }
+
+    @Auth
+    @GetMapping("/scrap")
+    public CommonResponse<Object> myScrap() throws ParseException{
+        Long userIdx = AuthHolder.getUserIdx();
+
+        List<MyScrapResponse> myScrapResponses= userService.findAllScraps(userIdx);
+
+       return ApiUtils.success(true,200,"내 장바구니 조회 성공", myScrapResponses);
+
+    }
+
 
     @Auth
     @PatchMapping("/profile")
