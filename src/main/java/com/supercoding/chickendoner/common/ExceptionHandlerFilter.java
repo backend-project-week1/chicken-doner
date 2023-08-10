@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.supercoding.chickendoner.common.Error.ErrorCode;
 import com.supercoding.chickendoner.common.util.ApiUtils;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -20,8 +22,10 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
             setErrorResponse(response, ErrorCode.CANT_ACCESS);
-        } catch (RuntimeException e) {
-            setErrorResponse(response, ErrorCode.LOGIN_INPUT_INVALID);
+        } catch (AccessDeniedException e) {
+            setErrorResponse(response, ErrorCode.HANDLE_ACCESS_DENIED);
+        } catch (JwtException e) {
+            filterChain.doFilter(request, response);
         }
     }
 

@@ -47,14 +47,9 @@ public class TokenProvider {
 
     // 밝급된 Token이 만료 시간이 지났는지 체크
     public static boolean isExpired(String token) {
-        try {
             Date expiredDate = extractClaims(token).getExpiration();
             // Token의 만료 날짜가 지금보다 이전인지 check
             return expiredDate.before(new Date());
-        } catch (RuntimeException e) {
-            throw new CustomException(ErrorCode.LOGIN_INPUT_INVALID);
-        }
-
     }
 
     // SecretKey를 사용해 Token Parsing
