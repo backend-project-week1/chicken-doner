@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -81,7 +82,11 @@ public class CommentService {
             // 리스폰스 객체 생성
             CommentGetResponse commentGetResponse = new CommentGetResponse();
             //객체 매핑
-            commentGetResponse = commentGetResponse.commentGetResponse(comment);
+            try {
+                commentGetResponse = commentGetResponse.commentGetResponse(comment);
+            } catch (ParseException e) {
+                throw new CustomException(ErrorCode.CONVERTING_FAILED);
+            }
             // 매핑된 객체 리스트에 추가
             getResponse.add(commentGetResponse);
         }
