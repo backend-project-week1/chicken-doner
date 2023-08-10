@@ -66,8 +66,8 @@ public class ReviewController {
         //상세리뷰 조회
         @GetMapping("/review/{reviewId}")
             public CommonResponse<Object> reviewDetail(@PathVariable("reviewId")Long id){//리뷰 Id로 조회
-            Review review = reviewService.getReview(id);
-            return ApiUtils.success(true, 200, "상세리뷰 가져오기 성공", review);
+            ReviewResponse reviewResponse = reviewService.getReview(id);
+            return ApiUtils.success(true, 200, "상세리뷰 가져오기 성공", reviewResponse);
         }
 
         //리뷰 리스트 조회

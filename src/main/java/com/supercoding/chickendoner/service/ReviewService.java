@@ -45,9 +45,22 @@ public class ReviewService {
         reviewRepository.save(review);
     }
     //리뷰 가져오기
-    public Review getReview(Long id) {
-        return reviewRepository.findById(id)
-            .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));//id로 리뷰를 가져오기
+    public ReviewResponse getReview(Long id) {
+        try{
+            Review review = reviewRepository.findById(id)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
+            User user = userRepository.findById(review.getId()).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_USER));
+
+            Long likeCount = likeRepository.countByIsDeletedFalseAndReview_Id(review.getId());
+
+            ReviewResponse reviewResponse = new ReviewResponse();
+            reviewResponse = reviewResponse.getReview(review, user, likeCount);
+
+            return reviewResponse;
+
+        } catch (ParseException e) {
+            throw new CustomException(ErrorCode.CONVERTING_FAILED);
+        }//id로 리뷰를 가져오기
     }
 
     //리뷰삭제
