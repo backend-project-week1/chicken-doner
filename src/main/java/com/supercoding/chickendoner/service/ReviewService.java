@@ -12,10 +12,12 @@ import com.supercoding.chickendoner.repository.ChickenRepository;
 import com.supercoding.chickendoner.repository.LikeRepository;
 import com.supercoding.chickendoner.repository.ReviewRepository;
 import com.supercoding.chickendoner.repository.UserRepository;
+
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -36,17 +38,18 @@ public class ReviewService {
     public void createReview(Long userIdx, ReviewCreateRequest reviewRequest) {
 
         User user = userRepository.findById(userIdx)
-            .orElseThrow(() -> new CustomException(ErrorCode.HANDLE_ACCESS_DENIED));
+                .orElseThrow(() -> new CustomException(ErrorCode.HANDLE_ACCESS_DENIED));
 
         Chicken chicken = chickenRepository.findById(reviewRequest.getChickenId())
-            .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_CHICKEN));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_CHICKEN));
 
-        Review review = reviewRequest.of(reviewRequest,user,chicken);
+        Review review = reviewRequest.of(reviewRequest, user, chicken);
         reviewRepository.save(review);
     }
+
     //리뷰 가져오기
     public ReviewResponse getReview(Long id) {
-        try{
+        try {
             Review review = reviewRepository.findById(id)
                     .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
             User user = userRepository.findById(review.getId()).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_USER));
@@ -67,20 +70,21 @@ public class ReviewService {
     public Long deleteReview(Long userIdx, Long id) {
         //게시글 검증
         Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
-    //유저 검증
-        if(!review.getUser().getId().equals(userIdx)){
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
+        //유저 검증
+        if (!review.getUser().getId().equals(userIdx)) {
             throw new CustomException(ErrorCode.CANT_ACCESS);
         }
         reviewRepository.deleteById(id);
         return review.getId();
     }
-//리뷰 수정
+
+    //리뷰 수정
     public void updateReview(Long userIdx, Long id) {
         Review review = reviewRepository.findById(id)
-            .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
 
-        if(!review.getUser().getId().equals(userIdx)){
+        if (!review.getUser().getId().equals(userIdx)) {
             throw new CustomException(ErrorCode.CANT_ACCESS);
         }
         review.updateContent(review.getContent());
@@ -94,15 +98,36 @@ public class ReviewService {
         ReviewResponse reviewResponse = new ReviewResponse();
 
         return reviewList.stream()
-            .map(review -> {
-                Optional<User> user = userRepository.findById(review.getUser().getId());
-                Long likeCount = likeRepository.countByIsDeletedFalseAndReview_Id(review.getId());
-                try {
-                    return reviewResponse.getReview(review, user.get(), likeCount);
-                } catch (ParseException e) {
-                    throw new CustomException(ErrorCode.CONVERTING_FAILED);
-                }
-            })
-            .collect(Collectors.toList());
+                .map(review -> {
+                    Optional<User> user = userRepository.findById(review.getUser().getId());
+                    Long likeCount = likeRepository.countByIsDeletedFalseAndReview_Id(review.getId());
+                    try {
+                        return reviewResponse.getReview(review, user.get(), likeCount);
+                    } catch (ParseException e) {
+                        throw new CustomException(ErrorCode.CONVERTING_FAILED);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<ReviewResponse> getListByChicken(Long chickenIdx) {
+
+        if(!chickenRepository.existsById(chickenIdx)) {
+            throw new CustomException(ErrorCode.NOTFOUND_CHICKEN);
+        }
+
+        List<Review> reviewList = reviewRepository.findAllByIsDeletedFalseAndChickenIdx(chickenIdx, Sort.by("createAt").descending());
+
+        ReviewResponse reviewResponse = new ReviewResponse();
+        return reviewList.stream()
+                .map(review -> {
+                    Long likeCount = likeRepository.countByIsDeletedFalseAndReview_Id(review.getId());
+                    try {
+                        return reviewResponse.getMyReview(review, likeCount);
+                    } catch (ParseException e) {
+                        throw new CustomException(ErrorCode.CONVERTING_FAILED);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }

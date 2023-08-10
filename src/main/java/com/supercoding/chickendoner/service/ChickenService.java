@@ -5,6 +5,7 @@ import com.supercoding.chickendoner.common.Error.ErrorCode;
 import com.supercoding.chickendoner.dto.response.ChickenResponse;
 import com.supercoding.chickendoner.entity.Chicken;
 import com.supercoding.chickendoner.repository.ChickenRepository;
+import com.supercoding.chickendoner.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class ChickenService {
 
     private final ChickenRepository chickenRepository;
+    private final ReviewRepository reviewrepository;
 
     /*치킨 리스트 조회*/
     public List<ChickenResponse> getChickenList() {
@@ -34,9 +36,10 @@ public class ChickenService {
             // for 문을 통해 엔티티 객체를 response 객체로 바이딩하는 과정
             for (Chicken chicken : getList) {
                 // 리스폰스객체 생성
+                Long reviewCount = reviewrepository.countByChickenIdxEquals(chicken.getId());
                 ChickenResponse chickenResponse = new ChickenResponse();
                 // 리스폰스 내부 빌더를 통하여 바인딩
-                chickenResponse = chickenResponse.chickenAllList(chicken);
+                chickenResponse = chickenResponse.chickenAllList(chicken, reviewCount);
                 // 바인딩된 객체를 ResponseList 에 add
                 chickenResponseList.add(chickenResponse);
             }
@@ -53,16 +56,13 @@ public class ChickenService {
     public ChickenResponse getChickenOne(Long chickenId) {
 
         // JPA로 검색하여 결과를 Optional로 받음
-        Optional<Chicken> optionalChicken = chickenRepository.findById(chickenId);
-
-        if (optionalChicken.isPresent()) {
+        Chicken chicken = chickenRepository.findById(chickenId).orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_CHICKEN));
+        Long reviewCount = reviewrepository.countByChickenIdxEquals(chicken.getId());
             // 반환해줄 Response 선언
             ChickenResponse chickenResponse = new ChickenResponse();
             // Response 메소드에 담아서 리턴
-            return chickenResponse.chickenAllList(optionalChicken.get());
-        } else {
-            throw new CustomException(ErrorCode.NOTFOUND_CHICKEN);
-        }
+            return chickenResponse.chickenAllList(chicken, reviewCount);
+
     }
 
 }

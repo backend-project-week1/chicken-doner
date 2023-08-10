@@ -11,7 +11,9 @@ import com.supercoding.chickendoner.dto.request.ReviewRequest;
 import com.supercoding.chickendoner.security.Auth;
 import com.supercoding.chickendoner.security.AuthHolder;
 import com.supercoding.chickendoner.service.ReviewService;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,49 +40,59 @@ public class ReviewController {
         Long userIdx = AuthHolder.getUserIdx();
         reviewService.createReview(userIdx, reviewRequest);
 
-            return ApiUtils.success(true, 200, "리뷰 작성  성공",null);
+        return ApiUtils.success(true, 200, "리뷰 작성  성공", null);
     }
- //게시글 삭제
+
+    //게시글 삭제
     @Auth
     @DeleteMapping("/review/{reviewId}")
     public CommonResponse<Object> deleteReview(@PathVariable("reviewId") Long id) {
 
         Long userIdx = AuthHolder.getUserIdx();
 
-      Long  deletedReviewId = reviewService.deleteReview(userIdx,id);
-            return ApiUtils.success(true, 200, deletedReviewId + " 번 리뷰 삭제 성공", deletedReviewId);
-        }
+        Long deletedReviewId = reviewService.deleteReview(userIdx, id);
+        return ApiUtils.success(true, 200, deletedReviewId + " 번 리뷰 삭제 성공", deletedReviewId);
+    }
+
     //게시글 수정
     @Auth
     @PatchMapping("/review/{reviewId}")
     public CommonResponse<Object> updateReview(@PathVariable("reviewId") Long id,
-        @RequestBody ReviewRequest reviewRequest) {
+                                               @RequestBody ReviewRequest reviewRequest) {
 
         //유저검증
         Long userIdx = AuthHolder.getUserIdx();
-        reviewService.updateReview(userIdx,id);
+        reviewService.updateReview(userIdx, id);
+
         return ApiUtils.success(true, 200, "리뷰 수정 성공", null);
     }
 
 
-        //상세리뷰 조회
-        @GetMapping("/review/{reviewId}")
-            public CommonResponse<Object> reviewDetail(@PathVariable("reviewId")Long id){//리뷰 Id로 조회
-            ReviewResponse reviewResponse = reviewService.getReview(id);
-            return ApiUtils.success(true, 200, "상세리뷰 가져오기 성공", reviewResponse);
-        }
+    //상세리뷰 조회@GetMapping("/review/{reviewId}")
+    @GetMapping("/review/{reviewId}")
+    public CommonResponse<Object> reviewDetail(@PathVariable("reviewId") Long id) {//리뷰 Id로 조회
+        ReviewResponse reviewResponse = reviewService.getReview(id);
+        return ApiUtils.success(true, 200, "상세리뷰 가져오기 성공", reviewResponse);
+    }
 
-        //리뷰 리스트 조회
-        @GetMapping("/review")
-            public CommonResponse<Object> reviewList(@RequestParam (required = false) String type){
+    //리뷰 리스트 조회
+    @GetMapping("/review")
+    public CommonResponse<Object> reviewList(@RequestParam(required = false) String type) {
         List<ReviewResponse> responses = reviewService.getReviewList(type);
-
-        if (responses != null){
-            return ApiUtils.success(true,200,"리뷰목록 가져오기 성공",responses);
-        }else {
-            return ApiUtils.success(false,400,"리뷰목록 가져오기 실패",null);
-            }
+        if (responses != null) {
+            return ApiUtils.success(true, 200, "리뷰목록 가져오기 성공", responses);
+        } else {
+            return ApiUtils.success(false, 400, "리뷰목록 가져오기 실패", null);
         }
     }
+
+    @GetMapping("/review/chicken/{chickenIdx}")
+    public CommonResponse<Object> reviewByChicken(@PathVariable("chickenIdx") Long chickenIdx) {
+        List<ReviewResponse> reviewResponse = reviewService.getListByChicken(chickenIdx);
+
+        return ApiUtils.success(true, 200, "치킨에 대한 리뷰 조회 성공", reviewResponse);
+    }
+
+}
 
 

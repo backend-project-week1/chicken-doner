@@ -16,15 +16,17 @@ public class ChickenResponse {
     private String chikenName;
     private String content;
     private Long price;
+    private Long reviewCount;
 
 
-    public ChickenResponse chickenAllList(Chicken chicken) {
+    public ChickenResponse chickenAllList(Chicken chicken, Long reviewCount) {
         // 치킨의 idx,chicken_name, content, price 리턴
         return ChickenResponse.builder()
-                .idx(Long.valueOf(chicken.getId()))
+                .idx(chicken.getId())
                 .chikenName(chicken.getChikenName())
                 .content(chicken.getContent())
                 .price(chicken.getPrice())
+                .reviewCount(reviewCount)
                 .build();
     }
 

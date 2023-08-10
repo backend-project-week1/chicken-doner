@@ -17,4 +17,8 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
 
     List<Review> findAllByIsDeletedEqualsAndUserId(Boolean isDeleted, Long userIdx ,Sort createdAt);
 
+    List<Review> findAllByIsDeletedFalseAndChickenIdx(Long chickenIdx, Sort sort);
+
+    Long countByChickenIdxEquals(Long chickenIdx);
+
 }
