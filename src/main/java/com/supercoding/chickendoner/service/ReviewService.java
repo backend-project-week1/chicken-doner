@@ -10,6 +10,7 @@ import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.repository.ChickenRepository;
 import com.supercoding.chickendoner.repository.ReviewRepository;
 import com.supercoding.chickendoner.repository.UserRepository;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,7 +53,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
     //유저 검증
-        if(!review.getUserIdx().getId().equals(userIdx)){
+        if(!review.getUser().getId().equals(userIdx)){
             throw new CustomException(ErrorCode.CANT_ACCESS);
         }
         reviewRepository.deleteById(id);
@@ -63,7 +64,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
             .orElseThrow(() -> new CustomException(ErrorCode.NOTFOUND_POST));
 
-        if(!review.getUserIdx().getId().equals(userIdx)){
+        if(!review.getUser().getId().equals(userIdx)){
             throw new CustomException(ErrorCode.CANT_ACCESS);
         }
         review.updateContent(review.getContent());
@@ -73,11 +74,12 @@ public class ReviewService {
     //리뷰 리스트
     public List<ReviewResponse> getReviewList(String type) {
         List<Review> reviewList = reviewRepository.findByIsDeletedEquals(false, Sort.by("createAt"));
+
         ReviewResponse reviewResponse = new ReviewResponse();
 
         return reviewList.stream()
             .map(review -> {
-                Optional<User> user = userRepository.findById(review.getUserIdx().getId());
+                Optional<User> user = userRepository.findById(review.getUser().getId());
                return reviewResponse.getReview(review, user.get());
             })
             .collect(Collectors.toList());

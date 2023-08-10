@@ -10,6 +10,7 @@ import com.supercoding.chickendoner.dto.request.UserRequest;
 import com.supercoding.chickendoner.dto.request.UserUpdateRequest;
 import com.supercoding.chickendoner.dto.response.LoginResponse;
 import com.supercoding.chickendoner.dto.response.MyScrapResponse;
+import com.supercoding.chickendoner.dto.response.ReviewResponse;
 import com.supercoding.chickendoner.dto.response.UserDetailResponse;
 import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.security.Auth;
@@ -85,6 +86,20 @@ public class UserController {
 
     }
 
+    @Auth
+    @GetMapping("/review")
+    public CommonResponse<Object> myReviews(){
+
+        Long userIdx = AuthHolder.getUserIdx();
+
+        List<ReviewResponse> responses = userService.getMyReviews(userIdx);
+
+        if (responses != null){
+            return ApiUtils.success(true,200,"리뷰목록 가져오기 성공",responses);
+        }else {
+            return ApiUtils.success(false,400,"리뷰목록 가져오기 실패",null);
+        }
+    }
 
     @Auth
     @PatchMapping("/profile")

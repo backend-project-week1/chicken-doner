@@ -22,7 +22,7 @@ public class ReviewCreateRequest extends ReviewRequest{
             .title(this.getTitle())
             .content(this.getContent())
             .point(this.getPoint())
-            .userIdx(user)
+            .user(user)
             .isDeleted(false)
             .build();
     }

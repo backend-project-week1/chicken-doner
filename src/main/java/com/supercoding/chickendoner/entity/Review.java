@@ -10,6 +10,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 
 @Getter
@@ -28,7 +29,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "user_idx", nullable = false)
-    private User userIdx;
+    private User user;
     @Column(name = "chicken_idx", nullable = false)
     private Long chickenIdx;
     @Column(name = "title", nullable = false)
@@ -47,7 +48,7 @@ public class Review {
     @Column(name = "create_at", nullable = false, updatable = false)
     private Timestamp createAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "updated_at", insertable = false)
     private Timestamp updatedAt;
 
