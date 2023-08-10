@@ -2,12 +2,14 @@ package com.supercoding.chickendoner.service;
 
 import com.supercoding.chickendoner.common.Error.CustomException;
 import com.supercoding.chickendoner.common.Error.ErrorCode;
+import com.supercoding.chickendoner.dto.request.LikeRequest;
 import com.supercoding.chickendoner.dto.request.ReviewCreateRequest;
 import com.supercoding.chickendoner.dto.response.ReviewResponse;
 import com.supercoding.chickendoner.entity.Chicken;
 import com.supercoding.chickendoner.entity.Review;
 import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.repository.ChickenRepository;
+import com.supercoding.chickendoner.repository.LikeRepository;
 import com.supercoding.chickendoner.repository.ReviewRepository;
 import com.supercoding.chickendoner.repository.UserRepository;
 import java.text.ParseException;
@@ -28,6 +30,7 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     private final ChickenRepository chickenRepository;
+    private final LikeRepository likeRepository;
 
     //리뷰 생성
     public void createReview(Long userIdx, ReviewCreateRequest reviewRequest) {
@@ -80,7 +83,12 @@ public class ReviewService {
         return reviewList.stream()
             .map(review -> {
                 Optional<User> user = userRepository.findById(review.getUser().getId());
-               return reviewResponse.getReview(review, user.get());
+                Long likeCount = likeRepository.countByIsDeletedFalseAndReview_Id(review.getId());
+                try {
+                    return reviewResponse.getReview(review, user.get(), likeCount);
+                } catch (ParseException e) {
+                    throw new CustomException(ErrorCode.CONVERTING_FAILED);
+                }
             })
             .collect(Collectors.toList());
     }

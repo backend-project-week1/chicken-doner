@@ -25,30 +25,30 @@ public class ReviewResponse {//보내줄 데이터
     private Double point;
     private String createAt;
     private String writer;
-    private boolean isDeleted;
+    private Long likeCount;
 
 
-    public ReviewResponse getReview(Review review, User user) {//FE 보내줄 데이터
+    public ReviewResponse getReview(Review review, User user, Long likeCount) throws ParseException {//FE 보내줄 데이터
         return ReviewResponse.builder()
             .idx(review.getId())
             .title(review.getTitle())
             .content(review.getContent())
             .point(review.getPoint())
-            .isDeleted(false)
+            .likeCount(likeCount)
             .writer(user.getNickname()) //회원 전체가 아닌 작성자로 알 수 있게
-            .createAt(String.valueOf(review.getCreateAt()))
+            .createAt(DateUtils.convertToString(review.getCreateAt()))
             .build();
     }
 
-    public ReviewResponse getMyReview(Review review) {//FE 보내줄 데이터
+    public ReviewResponse getMyReview(Review review, Long likeCount) throws ParseException {//FE 보내줄 데이터
         return ReviewResponse.builder()
             .idx(review.getId())
             .title(review.getTitle())
             .content(review.getContent())
             .point(review.getPoint())
-            .isDeleted(false)
+            .likeCount(likeCount)
             .writer(review.getUser().getNickname())
-            .createAt(String.valueOf(review.getCreateAt()))
+            .createAt(DateUtils.convertToString(review.getCreateAt()))
             .build();
     }
 }

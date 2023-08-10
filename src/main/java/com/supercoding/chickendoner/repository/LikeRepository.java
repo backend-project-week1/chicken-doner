@@ -22,4 +22,6 @@ public interface LikeRepository extends JpaRepository<Likes, LikeId> {
     @Query(value = "UPDATE Likes as l SET l.isDeleted =:isDeleted WHERE l.likeId.userId=:userId AND l.likeId.reviewId=:reviewId")
     void updateLikeStatusByUserAndReview(boolean isDeleted, Long userId, Long reviewId);
 
+    Long countByIsDeletedFalseAndReview_Id(Long reviewId);
+
 }

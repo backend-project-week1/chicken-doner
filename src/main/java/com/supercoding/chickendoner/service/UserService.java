@@ -15,6 +15,7 @@ import com.supercoding.chickendoner.entity.Chicken;
 import com.supercoding.chickendoner.entity.Review;
 import com.supercoding.chickendoner.entity.Scrap;
 import com.supercoding.chickendoner.entity.User;
+import com.supercoding.chickendoner.repository.LikeRepository;
 import com.supercoding.chickendoner.repository.ReviewRepository;
 import com.supercoding.chickendoner.repository.ScrapRepository;
 import com.supercoding.chickendoner.repository.UserRepository;
@@ -43,6 +44,7 @@ public class UserService {
     private final ScrapRepository scrapRepository;
 
     private final ReviewRepository reviewRepository;
+    private final LikeRepository likeRepository;
 
 
     public boolean checkLoginIdDuplicate(String username) {
@@ -206,7 +208,14 @@ public class UserService {
         ReviewResponse reviewResponse = new ReviewResponse();
 
         return reviews.stream()
-            .map(reviewResponse::getMyReview)
+            .map((review)->{
+                        try {
+                            Long likeCount = likeRepository.countByIsDeletedFalseAndReview_Id(review.getId());
+                            return reviewResponse.getMyReview(review, likeCount);
+                        } catch (ParseException e) {
+                            throw new CustomException(ErrorCode.CONVERTING_FAILED);
+                        }
+                    })
             .collect(Collectors.toList());
     }
 }
