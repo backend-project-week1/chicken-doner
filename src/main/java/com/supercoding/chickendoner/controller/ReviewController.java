@@ -14,6 +14,8 @@ import com.supercoding.chickendoner.service.ReviewService;
 
 import java.util.List;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,12 +31,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Api(tags= "리뷰 API")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
     @Auth
     @PostMapping("/review")
+    @ApiOperation(value = "리뷰 작성 API ", nickname = "리뷰 작성 API")
     public CommonResponse<Object> createReview(@RequestBody ReviewCreateRequest reviewRequest) {
         //토큰 검증
         Long userIdx = AuthHolder.getUserIdx();
@@ -46,6 +50,7 @@ public class ReviewController {
     //게시글 삭제
     @Auth
     @DeleteMapping("/review/{reviewId}")
+    @ApiOperation(value = "리뷰 삭제 API ", nickname = "리뷰 삭제 API")
     public CommonResponse<Object> deleteReview(@PathVariable("reviewId") Long id) {
 
         Long userIdx = AuthHolder.getUserIdx();
@@ -57,6 +62,7 @@ public class ReviewController {
     //게시글 수정
     @Auth
     @PatchMapping("/review/{reviewId}")
+    @ApiOperation(value = "리뷰 수정 API ", nickname = "리뷰 수정 API")
     public CommonResponse<Object> updateReview(@PathVariable("reviewId") Long id,
                                                @RequestBody ReviewRequest reviewRequest) {
 
@@ -70,6 +76,7 @@ public class ReviewController {
 
     //상세리뷰 조회@GetMapping("/review/{reviewId}")
     @GetMapping("/review/{reviewId}")
+    @ApiOperation(value = "리뷰 상세 조회 API ", nickname = "리뷰 상세 조회 API")
     public CommonResponse<Object> reviewDetail(@PathVariable("reviewId") Long id) {//리뷰 Id로 조회
         ReviewResponse reviewResponse = reviewService.getReview(id);
         return ApiUtils.success(true, 200, "상세리뷰 가져오기 성공", reviewResponse);
@@ -77,6 +84,7 @@ public class ReviewController {
 
     //리뷰 리스트 조회
     @GetMapping("/review")
+    @ApiOperation(value = "리뷰 리스트 API", nickname = "리뷰 리스트 API")
     public CommonResponse<Object> reviewList(@RequestParam(required = false) String type) {
         List<ReviewResponse> responses = reviewService.getReviewList(type);
         if (responses != null) {
@@ -87,6 +95,7 @@ public class ReviewController {
     }
 
     @GetMapping("/review/chicken/{chickenIdx}")
+    @ApiOperation(value = "치킨별 리뷰 리스트 조회 API", nickname = "치킨별 리뷰 리스트 조회 API")
     public CommonResponse<Object> reviewByChicken(@PathVariable("chickenIdx") Long chickenIdx) {
         List<ReviewResponse> reviewResponse = reviewService.getListByChicken(chickenIdx);
 

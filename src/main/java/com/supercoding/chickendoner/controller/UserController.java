@@ -16,6 +16,8 @@ import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.security.Auth;
 import com.supercoding.chickendoner.security.AuthHolder;
 import com.supercoding.chickendoner.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +30,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/user")
+@Api(tags= "유저 API")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/signup")
+    @ApiOperation(value = "회원가입 API", nickname = "회원가입 API")
     public CommonResponse<Object> signUp(@RequestBody UserDetailRequest userDetailRequest) {
 
         if (!userService.checkLoginIdDuplicate(userDetailRequest.getUsername())) {
@@ -44,6 +48,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @ApiOperation(value = "로그인 API", nickname = "로그인 API")
     public CommonResponse<Object> login(@RequestBody LoginRequest loginRequest) {
         User loginUser = userService.login(loginRequest);
         if (loginUser == null) {
@@ -59,6 +64,7 @@ public class UserController {
 
     @Auth
     @DeleteMapping("/delete")
+    @ApiOperation(value = "유저 탈퇴 API", nickname = "유저 탈퇴 API")
     public CommonResponse<Object> delete() {
         Long userIdx = AuthHolder.getUserIdx();
         String deletedUser = userService.deleteUser(userIdx);
@@ -67,6 +73,7 @@ public class UserController {
 
     @Auth
     @GetMapping("/profile")
+    @ApiOperation(value = "내 프로필 조회 API", nickname = "내 프로필 조회 API")
     public CommonResponse<Object> myProfile() throws ParseException {
         Long userIdx = AuthHolder.getUserIdx();
 
@@ -77,6 +84,7 @@ public class UserController {
 
     @Auth
     @GetMapping("/scrap")
+    @ApiOperation(value = "내 장바구니 조회 API", nickname = "내 장바구니 조회 API")
     public CommonResponse<Object> myScrap() throws ParseException{
         Long userIdx = AuthHolder.getUserIdx();
 
@@ -88,6 +96,7 @@ public class UserController {
 
     @Auth
     @GetMapping("/review")
+    @ApiOperation(value = "내가 작성한 리뷰 조회 API", nickname = "내가 작성한 리뷰 조회 API")
     public CommonResponse<Object> myReviews(){
 
         Long userIdx = AuthHolder.getUserIdx();
@@ -96,13 +105,14 @@ public class UserController {
 
         if (responses != null){
             return ApiUtils.success(true,200,"리뷰목록 가져오기 성공",responses);
-        }else {
+        }   else {
             return ApiUtils.success(false,400,"리뷰목록 가져오기 실패",null);
         }
     }
 
     @Auth
     @PatchMapping("/profile")
+    @ApiOperation(value = "내 회원 수정 API", nickname = "내 회원 수정 API")
     public CommonResponse<Object> patchProfile(@RequestBody UserUpdateRequest userUpdateRequest) {
         Long userIdx = AuthHolder.getUserIdx();
         if (!Objects.equals(userIdx, userUpdateRequest.getUserIdx())) {

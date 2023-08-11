@@ -3,6 +3,7 @@ package com.supercoding.chickendoner.dto.request;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.supercoding.chickendoner.entity.User;
 import com.supercoding.chickendoner.security.UserRole;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,11 +15,14 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Schema(description = "회원 가입 DTO")
 public class UserDetailRequest extends UserRequest {
 
     @NotBlank(message = "아이디를 입력해주세요")
+    @Schema(description = "아이디 입력 필드")
     private String username;
     @NotBlank(message = "패스워드를 입력해주세요")
+    @Schema(description = "패스워드 입력 필드")
     private String password;
 
 

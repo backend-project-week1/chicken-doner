@@ -7,6 +7,7 @@ import com.supercoding.chickendoner.dto.request.ScrapRequest;
 import com.supercoding.chickendoner.security.Auth;
 import com.supercoding.chickendoner.security.AuthHolder;
 import com.supercoding.chickendoner.service.ScrapService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/")
+@Api(tags= "장바구니 API")
 public class ScrapController {
 
     private final ScrapService scrapService;

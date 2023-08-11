@@ -52,7 +52,7 @@ public class ScrapService {
         //스크랩(장바구니) 존재하는 지 여부
         Boolean isScrapPresent = scrapRepository.existsByChickenIdAndUserId(chicken.getId(), user.getId());
 
-        if (isScrapPresent) {
+        if (Boolean.TRUE.equals(isScrapPresent)) {
             //스크랩 이미 존재 시,
             Scrap scrapfound = scrapRepository.findScrapByChickenIdAndUserId(chicken.getId(), user.getId());
 
@@ -92,7 +92,7 @@ public class ScrapService {
         Boolean isScrapPresent = scrapRepository.existsByChickenIdAndUserId(chicken.getId(), user.getId());
 
         
-        if (isScrapPresent){
+        if (Boolean.TRUE.equals(isScrapPresent)){
             //스크랩 이미 존재 시,
 
             Scrap scrapfound = scrapRepository.findScrapByChickenIdAndUserId(chicken.getId(), user.getId());

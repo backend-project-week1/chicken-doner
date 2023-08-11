@@ -9,7 +9,9 @@ import com.supercoding.chickendoner.dto.response.CommentGetResponse;
 import com.supercoding.chickendoner.security.Auth;
 import com.supercoding.chickendoner.security.AuthHolder;
 import com.supercoding.chickendoner.service.CommentService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
+@Api(tags = "댓글 API")
 public class CommentController {
 
     private final CommentService commentService;
@@ -56,7 +59,7 @@ public class CommentController {
     @Auth
     @ApiOperation(value = "리뷰에 대한 댓글 수정")
     @PatchMapping(value = "/{comment_id}/comment")
-    public CommonResponse<Object> patchcomment(
+    public CommonResponse<Object> patchComment(
             @PathVariable("comment_id") Long commentId,
             @RequestBody CommentUpdateRequest updateRequest
     ) {

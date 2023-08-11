@@ -97,7 +97,6 @@ public class UserService {
         }
         User user = userRepository.findById(userIdx)
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_AUTHORIZED));
-//        userRepository.deleteUser(user.getId());
         userRepository.deleteById(user.getId());
         return user.getUsername();
     }
