@@ -17,7 +17,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE user as u SET u.is_deleted = true WHERE idx = ?")
-public class User {
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx", nullable = false)
@@ -38,6 +38,9 @@ public class User {
 
     @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
+
+    @Column(name = "mileage", nullable = false)
+    private Long mileage;
 
     @CreationTimestamp
     @Column(name = "create_at", nullable = false, updatable = false)

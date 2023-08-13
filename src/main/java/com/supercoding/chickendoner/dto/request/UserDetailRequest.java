@@ -33,6 +33,7 @@ public class UserDetailRequest extends UserRequest {
                 .nickname(this.getNickname())
                 .address(this.getAddress())
                 .phoneNumber(this.getPhoneNumber())
+                .mileage(200000L)
                 .isDeleted(false)
                 .role(UserRole.USER)
                 .build();
